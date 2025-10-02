@@ -34,11 +34,10 @@ Users can log in using their Google or GitHub accounts. The project uses **envir
 
 ### Secured Resource Endpoints (OAuth2 Required)
 
-To access these, users must be logged in via Google or GitHub OAuth2:
-
 | Method | URL          | Description                          |
 |--------|--------------|--------------------------------------|
 | GET    | `/user`      | Returns authenticated user info      |
+| GET    | `/profile`   | Returns user profile details         |
 | Any    | Other routes | Secured by default, requires OAuth2  |
 
 ---
@@ -53,6 +52,7 @@ To access these, users must be logged in via Google or GitHub OAuth2:
 4. Add **Authorized redirect URI**:
 
 http://localhost:8080/login/oauth2/code/google
+
 
 5. Copy **Client ID** and **Client Secret**.  
 6. Set them as environment variables:
@@ -70,7 +70,7 @@ Reference them in application.properties:
 spring.security.oauth2.client.registration.google.client-id=${GOOGLE_CLIENT_ID}
 spring.security.oauth2.client.registration.google.client-secret=${GOOGLE_CLIENT_SECRET}
 spring.security.oauth2.client.registration.google.scope=openid,profile,email
-2️⃣ GitHub OAuth2 Setup
+ ### 2️⃣ GitHub OAuth2 Setup
 Go to GitHub → Settings → Developer settings → OAuth Apps.
 
 Click New OAuth App.
