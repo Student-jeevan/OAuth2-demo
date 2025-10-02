@@ -58,7 +58,7 @@ http://localhost:8080/login/oauth2/code/google
 6. Set them as environment variables:
 
 **Windows (PowerShell):**
-```powershell
+powershell
 setx GOOGLE_CLIENT_ID "your-google-client-id"
 setx GOOGLE_CLIENT_SECRET "your-google-client-secret"
 Linux/Mac:
