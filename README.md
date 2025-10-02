@@ -1,79 +1,118 @@
-# OAuth2 Demo Application (Spring Boot)
+# Spring Boot OAuth2 Demo: SpringOAuth2Demo
 
-This is a Spring Boot demo application showcasing **OAuth2 login integration** with Google and GitHub.  
+This is a **Spring Boot demo application** showcasing **OAuth2 login integration** with **Google** and **GitHub**.  
 Users can log in using their Google or GitHub accounts. The project uses **environment variables** to securely manage OAuth client credentials.
 
 ---
 
-## 1️⃣ Spring Boot Configuration
+## 🛠️ Tech Stack & Configuration
 
-1. Ensure you have **Java 17+** and **Maven** installed.  
-2. Clone the repository:
-```bash
-git clone https://github.com/your-username/oauth2-demo.git
-cd oauth2-demo
-Set your environment variables (replace with your keys):
-Windows (PowerShell):
+| Technology              | Role / Purpose                        |
+|-------------------------|--------------------------------------|
+| Spring Boot             | Application Framework                 |
+| Spring Security 6+      | Security / OAuth2 Integration         |
+| OAuth2                  | Google & GitHub Login                 |
+| Maven                   | Build / Dependency Management         |
+| Lombok                  | Boilerplate Code Reduction            |
+| MySQL (Optional)        | Persistent Storage (if used)         |
 
+---
+
+## 🌐 API Endpoints
+
+**Base URL:** `http://localhost:8080`  
+
+### Authentication & Public Endpoints (No OAuth2 Required)
+
+| Method | URL     | Description          |
+|--------|---------|--------------------|
+| GET    | `/home` | Public welcome page |
+
+> ⚠️ All other endpoints are secured. Users must log in via **Google** or **GitHub** OAuth2 to access them. Spring Security automatically handles the redirection to the OAuth2 provider.  
+
+---
+
+### Secured Resource Endpoints (OAuth2 Required)
+
+To access these, users must be logged in via Google or GitHub OAuth2:
+
+| Method | URL          | Description                          |
+|--------|--------------|--------------------------------------|
+| GET    | `/user`      | Returns authenticated user info      |
+| Any    | Other routes | Secured by default, requires OAuth2  |
+
+---
+
+## 🌐 How to Configure OAuth2
+
+### 1️⃣ Google OAuth2 Setup
+
+1. Go to [Google Cloud Console → APIs & Services → Credentials](https://console.cloud.google.com/apis/credentials).  
+2. Click **Create Credentials → OAuth 2.0 Client ID**.  
+3. Set **Application type** to `Web application`.  
+4. Add **Authorized redirect URI**:
+
+http://localhost:8080/login/oauth2/code/google
+
+5. Copy **Client ID** and **Client Secret**.  
+6. Set them as environment variables:
+
+**Windows (PowerShell):**
+```powershell
 setx GOOGLE_CLIENT_ID "your-google-client-id"
 setx GOOGLE_CLIENT_SECRET "your-google-client-secret"
-setx GITHUB_CLIENT_ID "your-github-client-id"
-setx GITHUB_CLIENT_SECRET "your-github-client-secret"
-
 Linux/Mac:
 
 export GOOGLE_CLIENT_ID=your-google-client-id
 export GOOGLE_CLIENT_SECRET=your-google-client-secret
-export GITHUB_CLIENT_ID=your-github-client-id
-export GITHUB_CLIENT_SECRET=your-github-client-secret
-
-Run the application:
-mvn spring-boot:run
-
-
-Open the browser and navigate to:
-
-http://localhost:8080
-How to Add Google OAuth2
-Go to Google Cloud Console → APIs & Services → Credentials
-
-Click Create Credentials → OAuth 2.0 Client ID
-
-Set Application type to Web application
-
-Add Authorized redirect URI:
-
-http://localhost:8080/login/oauth2/code/google
-Copy the Client ID and Client Secret
-
-Set them as environment variables (GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET)
-
-Add to your application.properties as:
+Reference them in application.properties:
 
 spring.security.oauth2.client.registration.google.client-id=${GOOGLE_CLIENT_ID}
 spring.security.oauth2.client.registration.google.client-secret=${GOOGLE_CLIENT_SECRET}
 spring.security.oauth2.client.registration.google.scope=openid,profile,email
-3️⃣ How to Add GitHub OAuth2
-Go to GitHub → Settings → Developer settings → OAuth Apps
+2️⃣ GitHub OAuth2 Setup
+Go to GitHub → Settings → Developer settings → OAuth Apps.
 
-Click New OAuth App
+Click New OAuth App.
 
-Set Application name and Homepage URL (http://localhost:8080)
+Set Application name and Homepage URL (http://localhost:8080).
 
 Add Authorization callback URL:
 
 http://localhost:8080/login/oauth2/code/github
-Copy the Client ID and Client Secret
+Copy Client ID and Client Secret.
 
-Set them as environment variables (GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET)
+Set them as environment variables:
 
-Add to your application.properties as:
+Windows (PowerShell):
+
+setx GITHUB_CLIENT_ID "your-github-client-id"
+setx GITHUB_CLIENT_SECRET "your-github-client-secret"
+Linux/Mac:
+
+export GITHUB_CLIENT_ID=your-github-client-id
+export GITHUB_CLIENT_SECRET=your-github-client-secret
+Reference them in application.properties:
 
 spring.security.oauth2.client.registration.github.client-id=${GITHUB_CLIENT_ID}
 spring.security.oauth2.client.registration.github.client-secret=${GITHUB_CLIENT_SECRET}
 spring.security.oauth2.client.registration.github.scope=user:email
+💡 OAuth2 Authentication Flow Overview
+User clicks login via Google or GitHub.
+
+Spring Security redirects the user to the respective OAuth2 provider.
+
+User authenticates on Google/GitHub.
+
+OAuth2 provider redirects back to:
+
+http://localhost:8080/login/oauth2/code/{provider}
+Spring Security creates a session for the authenticated user.
+
+Secured endpoints now require the user to be logged in; OAuth2 session is automatically handled.
+
 ✅ Notes
-Keep application.properties with real secrets out of GitHub; use .gitignore.
+Keep application.properties with real secrets out of GitHub; add it to .gitignore.
 
 Provide a template application.properties.example for others to copy.
 
